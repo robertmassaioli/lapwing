@@ -1,0 +1,24 @@
+{
+	"#*": "{*}",
+	"KPA*L": "{<}",
+	"KA*PS": "{:set_case:upper}",
+	"K*BD": "{:keyboard_layout:dvorak}",
+	"PHA*EPB": "mane",
+	"PHAEPB": "many",
+	"SK-PBT": "{#Command(Shift(4))}",
+	"K-BD": "{:keyboard_layout:qwerty}",
+	"*UPD": "{*<}",
+	"HRO*ER": "{>}",
+	"HRO*ERD": "{*>}",
+	"TK-FPS": "{*!}",
+	"#": "{*+}",
+	"KA*PD": "{*-|}",
+	"AFPS": "{*?}",
+	"AOEPB": "even",
+	"OEUP": "API",
+	"A/PRAOUFR": "approver",
+	"#PHAS/KWRO*ELD": "Massaioli",
+	"#AT/HRAS/KWRAPB": "Atlassian",
+	"#PHA/SAEU/KWROE/HREU": "Massaioli"
+}
+

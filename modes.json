@@ -1,0 +1,12 @@
+{
+	"TPHO*EFP": "{:set_space:}",
+	"STPHA*EUBG": "{:set_space:_}",
+	"SPAO*EUPBL": "{:set_case:lower} {:set_space:-}",
+	"K-BGS": "{:set_case:title}{:set_space:}",
+	"KHRAO*ER": "CLEAR",
+	"KA*PS": "{:set_case:upper}",
+	"R*EFT": "{:set_case:normal}{:set_space: }",
+	"TAO*EULT": "{:set_case:title}",
+	"KPHA*PLD": "{:set_space:,  }"
+}
+

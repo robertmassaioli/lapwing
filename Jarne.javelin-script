@@ -286,6 +286,73 @@ const SC_CONSUMER_VOLUME_DOWN = 0xda;         // UsageId 0xea
 const SC_CONSUMER_BRIGHTNESS_UP = 0xde;       // UsageId 0x6f
 const SC_CONSUMER_BRIGHTNESS_DOWN = 0xdf;     // UsageId 0x70
 
+// Layout constants
+const HOST_LAYOUT_QWERTY = 0;
+const HOST_LAYOUT_DVORAK = 1;
+const HOST_LAYOUT_COLEMAK = 2;
+const HOST_LAYOUT_WORKMAN = 3;
+
+var selectedHostLayout = HOST_LAYOUT_DVORAK;
+
+// QWERTY scan codes (A-Z)
+const qwertyScanCodes = [[
+    SC_A SC_B SC_C SC_D SC_E SC_F SC_G SC_H SC_I SC_J
+    SC_K SC_L SC_M SC_N SC_O SC_P SC_Q SC_R SC_S SC_T
+    SC_U SC_V SC_W SC_X SC_Y SC_Z
+]];
+
+// Layout mappings
+const dvorakScanCodes = [[[
+    SC_A, SC_X, SC_J, SC_E, SC_D, SC_U, SC_I, SC_T, SC_C, SC_N,
+    SC_K, SC_S, SC_M, SC_B, SC_R, SC_L, SC_APOSTROPHE, SC_P,
+    SC_O, SC_G, SC_H, SC_Z, SC_COMMA, SC_Q, SC_F, SC_SEMICOLON
+]]];
+
+const colemakScanCodes = [[[
+    SC_A, SC_M, SC_G, SC_S, SC_F, SC_T, SC_K, SC_D, SC_U, SC_Y,
+    SC_N, SC_L, SC_B, SC_E, SC_I, SC_O, SC_Q, SC_S, SC_R, SC_H,
+    SC_L, SC_W, SC_V, SC_X, SC_J, SC_Z
+]]];
+
+const workmanScanCodes = [[[
+    SC_A, SC_M, SC_R, SC_H, SC_O, SC_T, SC_G, SC_E, SC_U, SC_F,
+    SC_N, SC_S, SC_W, SC_K, SC_I, SC_D, SC_Z, SC_P, SC_R, SC_A,
+    SC_H, SC_V, SC_Q, SC_B, SC_Y, SC_X
+]]];
+
+func hostLayoutLookup(hostLayout, qwertyScanCode) {
+  if (HOST_LAYOUT_QWERTY == hostLayout) {
+    return qwertyScanCode;
+  }
+
+  // The lookup arrays are only A-Z so that is the only range that this function
+  // currently cares about, if that changes in the future then this logic will need
+  // to be updated. This does mean that the lookup index of the array is very easy
+  // to reverse engineer from the scan code however.
+  var lookupIndex = qwertyScanCode - SC_A;
+
+  if (HOST_LAYOUT_DVORAK == hostLayout) {
+    return dvorakScanCodes[lookupIndex];
+  }
+
+  if (HOST_LAYOUT_COLEMAK == hostLayout) {
+    return colemakScanCodes[lookupIndex];
+  }
+
+  if (HOST_LAYOUT_WORKMAN == hostLayout) {
+    return workmanScanCodes[lookupIndex];
+  }
+
+  return qwertyScanCode;
+}
+
+func rotateLayout() {
+  selectedHostLayout = selectedHostLayout + 1;
+  if (selectedHostLayout > HOST_LAYOUT_WORKMAN) {
+    selectedHostLayout = HOST_LAYOUT_QWERTY;
+  }
+}
+
 const LED_STATUS_NUM_LOCK = 0;
 const LED_STATUS_CAPS_LOCK = 1;
 const LED_STATUS_SCROLL_LOCK = 2;
@@ -600,7 +667,9 @@ var wordPressActivatedShift = 0;
 var lastPressScanCode = 0;
 var lastPressModifiers = 0;
 
-func pressScanCodeButton(buttonIndex, modifiers, scanCode, isModifier) {
+func pressScanCodeButton(buttonIndex, modifiers, qwertyScanCode, isModifier) {
+  var scanCode = hostLayoutLookup(selectedHostLayout, qwertyScanCode);
+
   if (isInPressAll()) {
     if(isModifier) return;
     if(!isModifierKey(scanCode) || (wasSteno24 && buttonIndex == 24)) {
@@ -646,7 +715,9 @@ func pressScanCodeButton(buttonIndex, modifiers, scanCode, isModifier) {
   }
 }
 
-func releaseScanCodeButton(scanCode) {
+func releaseScanCodeButton(qwertyScanCode) {
+  var scanCode = hostLayoutLookup(selectedHostLayout, qwertyScanCode);
+
   releaseScanCode(scanCode);
 
   if (wordCaps) {
@@ -820,6 +891,18 @@ func drawDisplayAbc() {
 
   drawDisplay0(ABC_IMAGE);
   setAutoDraw(1, AUTO_DRAW_WPM);
+
+  var text;
+  if (selectedHostLayout == HOST_LAYOUT_DVORAK)  {
+    text = "Dvorak";
+  } else if(selectedHostLayout == HOST_LAYOUT_COLEMAK) {
+    text = "Colemak";
+  } else if(selectedHostLayout == HOST_LAYOUT_WORKMAN) {
+    text = "Workman";
+  } else {
+    return;
+  }
+  drawText(0, DISPLAY_WIDTH/2, DISPLAY_HEIGHT - 48 + 10, FONT_ID_NORMAL, TEXT_ALIGNMENT_MIDDLE, text);
 }
 
 func drawDisplayFunction() {

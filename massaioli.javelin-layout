@@ -257,7 +257,7 @@
 									},
 									{
 										"t": "l",
-										"l": 1128808787
+										"l": 1128808786
 									},
 									{
 										"t": "p",
@@ -521,7 +521,7 @@
 									},
 									{
 										"t": "l",
-										"l": 1128808787
+										"l": 1128808786
 									}
 								]
 							}
@@ -552,7 +552,7 @@
 									},
 									{
 										"t": "l",
-										"l": 1128808787
+										"l": 1128808786
 									},
 									{
 										"t": "p",
@@ -1803,7 +1803,9 @@
 					}
 				]
 			],
-			"scripts": {},
+			"scripts": {
+				"header": "// The purpose of this layer is to be when the computer is configured to use Qwerty and I still need Dvorak output."
+			},
 			"user_scripts": {
 				"checkWordCapsAndCapsLock": "func checkWordCapsAndCapsLock() {\n  // Word caps when both shifts are pressed.\n  // Caps lock when both shifts, alt and sym pressed.\n  if (checkButtonState(\"000000000000000000000000100000000001000000\")) {\n    wordCaps = !wordCaps;\n    updateDisplay();\n  } else if (checkButtonState(\"000000000000000000000000100000000001010000\")) {\n    tapCapsLock();\n    wordCaps = 0;\n    updateDisplay();\n  }\n}\n\nfunc tapCapsLock() {\n  // Tapping caps lock on macOS does not activate it.\n  // There needs to be a delay, so a timer is used to trigger the release.\n  pressScanCode(SC_CAPS);\n  startTimer(TIMER_ID_CAPS_RELEASE, 200, 0, @{\n    releaseScanCode(SC_CAPS);\n  });\n}"
 			},
